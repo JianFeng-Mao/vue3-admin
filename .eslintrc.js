@@ -1,32 +1,29 @@
-const path = require('path');
-
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
+    node: true
+  },
+  settings: {
+    'import/resolver': {
+      // 解决项目中使用 webpack的别名alias 错误
+      // eslint-import-resolver-alias
+      alias: {
+        map: [['@', './src']],
+        extensions: [
+          '.vue',
+          '.js',
+          '.jsx',
+          '.json'
+        ]
+      }
+    }
   },
   extends: [
     'eslint:recommended',
     'airbnb-base',
     'plugin:vue/vue3-essential'
   ],
-  settings: {
-    'import/resolver': {
-      alias: {
-        map: [
-          [
-            '@',
-            path.resolve(__dirname, 'src')
-          ]
-        ],
-        extensions: [
-          '.js',
-          '.jsx',
-          '.vue'
-        ]
-      }
-    }
-  },
   overrides: [
     {
       env: { node: true },
@@ -41,26 +38,48 @@ module.exports = {
   },
   plugins: ['vue'],
   rules: {
-    'import/extensions': [
+    'import/extensions': 'off', // 禁用是否使用文件扩展名检测（只能配置项目中import的都带文件名扩展名或者都不带？）
+    // 'import/extensions': [
+    //   'error',
+    //   'always',
+    //   {
+    //     ignorePackages: false,
+    //     pattern: {
+    //       js: 'never',
+    //       jsx: 'never',
+    //       vue: 'never',
+    //       json: 'never'
+    //     }
+    //   }
+    // ],
+    'prefer-destructuring': [
       'error',
-      'never'
+      {
+        object: false,
+        array: false
+      }
+    ],
+    'class-methods-use-this': [
+      'error',
+      { exceptMethods: ['apply'] }
+    ],
+    'import/no-extraneous-dependencies': [ // resolve: should be listed in the project's dependencies
+      'error',
+      {
+        devDependencies: true,
+        peerDependencies: true
+      }
     ],
     'prettier/prettier': 'off',
     'linebreak-style': 'off', // 换行符
     'no-tabs': 'off',
     'array-bracket-newline': [ // 数组括号的开头和结尾之前是否执行换行
       'error',
-      {
-        multiline: true,
-        minItems: 2
-      }
+      { multiline: true }
     ],
     'array-element-newline': [ // 数组元素之间实行换行
       'error',
-      {
-        multiline: true,
-        minItems: 2
-      }
+      'consistent'
     ],
     'comma-dangle': [ // 不允许尾随逗号
       'error',
@@ -69,20 +88,13 @@ module.exports = {
     'object-curly-newline': [ // 对象{ 和其后面的标记之间，以及在 } 和其前面的对象字面或结构化赋值的标记之间进行换行
       'error',
       {
-        ObjectExpression: {
-          multiline: true,
-          minProperties: 2
-        },
-        ObjectPattern: {
-          multiline: true,
-          minProperties: 2
-        },
-        ImportDeclaration: 'never',
-        ExportDeclaration: {
-          multiline: true,
-          minProperties: 5
-        }
+        multiline: true,
+        consistent: true
       }
+    ],
+    'object-property-newline': [
+      'error',
+      { allowAllPropertiesOnSameLine: true }
     ],
     'vue/html-indent': [
       'error',
