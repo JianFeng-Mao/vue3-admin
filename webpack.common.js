@@ -4,6 +4,13 @@ const { VueLoaderPlugin } = require('vue-loader');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
+// 0.17.2 版本导出的是default
+const AutoImport = require('unplugin-auto-import/webpack').default;
+
+// 0.26.0 版本导出的是default
+const Components = require('unplugin-vue-components/webpack').default;
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+
 module.exports = {
   name: 'vue3-admin',
   entry: {
@@ -39,8 +46,14 @@ module.exports = {
     }),
     new ESLintPlugin({
       fix: true /* 自动帮助修复 */,
-      extensions: ['js', 'json', 'coffee', 'vue'],
+      extensions: ['js', 'json', 'vue'],
       exclude: 'node_modules'
+    }),
+    AutoImport({
+      resolvers: [ElementPlusResolver()]
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()]
     })
   ]
 };
