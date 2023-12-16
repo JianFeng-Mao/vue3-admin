@@ -1,8 +1,10 @@
 <template>
-	<div />
+	<div>
+		home
+	</div>
 </template>
 
-<script setup></script>
+<script name="home" setup></script>
 
 <style lang="scss" scoped>
 

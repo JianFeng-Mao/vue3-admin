@@ -29,11 +29,14 @@ module.exports = {
     },
     extensions: ['.js', '.vue', '.json']
   },
+  resolveLoader: { // 指定解析loader包的路径
+    modules: ['node_modules', './loaders']
+  },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        use: ['vue-loader', 'component-name-loader']
       }
     ]
   },

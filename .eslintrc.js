@@ -10,12 +10,7 @@ module.exports = {
       // eslint-import-resolver-alias
       alias: {
         map: [['@', './src']],
-        extensions: [
-          '.vue',
-          '.js',
-          '.jsx',
-          '.json'
-        ]
+        extensions: ['.vue', '.js', '.jsx', '.json']
       }
     }
   },
@@ -59,23 +54,25 @@ module.exports = {
         array: false
       }
     ],
-    'class-methods-use-this': [
-      'error',
-      { exceptMethods: ['apply'] }
-    ],
-    'import/no-extraneous-dependencies': [ // resolve: should be listed in the project's dependencies
-      'error',
-      {
-        devDependencies: true,
-        peerDependencies: true
+    'class-methods-use-this': ['error', { exceptMethods: ['apply'] }],
+    'import/no-extraneous-dependencies': 'off',
+    'space-before-function-paren': [
+      'error', {
+        anonymous: 'never',
+        named: 'never',
+        asyncArrow: 'always'
       }
     ],
+    'no-param-reassign': 'off',
+    'func-names': 'off',
     'prettier/prettier': 'off',
     'linebreak-style': 'off', // 换行符
     'no-tabs': 'off',
     'array-bracket-newline': [ // 数组括号的开头和结尾之前是否执行换行
       'error',
-      { multiline: true }
+      {
+        multiline: true
+      }
     ],
     'array-element-newline': [ // 数组元素之间实行换行
       'error',
@@ -92,10 +89,7 @@ module.exports = {
         consistent: true
       }
     ],
-    'object-property-newline': [
-      'error',
-      { allowAllPropertiesOnSameLine: true }
-    ],
+    'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
     'vue/html-indent': [
       'error',
       'tab',
