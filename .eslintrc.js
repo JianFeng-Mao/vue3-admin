@@ -54,6 +54,8 @@ module.exports = {
         array: false
       }
     ],
+    'max-len': 'off',
+    'vue/comment-directive': 'off',
     'class-methods-use-this': ['error', { exceptMethods: ['apply'] }],
     'import/no-extraneous-dependencies': 'off',
     'space-before-function-paren': [
