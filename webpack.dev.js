@@ -7,16 +7,26 @@ module.exports = merge(commonConfig, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    static: path.resolve(__dirname, 'public'),
+    static: path.resolve(__dirname, 'dist'),
     port: 11003,
     open: true,
-    hot: true
+    hot: true,
+    host: 'local-ipv4'
   },
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        test: /\.(s)?css$/i,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              additionalData: '@use "@/styles/element-vars.scss";'
+            }
+          }
+        ]
       }
     ]
   },

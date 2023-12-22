@@ -1,8 +1,9 @@
 <template>
-	<div id="app">
+	<el-config-provider size="small">
 		<router-view />
-	</div>
+	</el-config-provider>
 </template>
 
-<style scoped>
-</style>
+<script setup>
+
+</script>

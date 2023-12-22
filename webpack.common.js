@@ -1,20 +1,16 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const { DefinePlugin } = require('webpack');
-
-// 0.17.2 版本导出的是default
 const AutoImport = require('unplugin-auto-import/webpack').default;
-
-// 0.26.0 版本导出的是default
 const Components = require('unplugin-vue-components/webpack').default;
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+const ElementPlus = require('unplugin-element-plus/webpack');
 
 module.exports = {
   name: 'vue3-admin',
   entry: {
-    app: path.resolve(__dirname, 'src/main.js')
+    app: './src/main.js'
   },
   output: {
     filename: 'js/[name].[contenthash:8].js',
@@ -25,11 +21,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve('src')
+      '@': path.resolve(__dirname, 'src')
     },
     extensions: ['.js', '.vue', '.json']
   },
-  resolveLoader: { // 指定解析loader包的路径
+  resolveLoader: {
     modules: ['node_modules', './loaders']
   },
   module: {
@@ -37,6 +33,11 @@ module.exports = {
       {
         test: /\.vue$/,
         use: ['vue-loader', 'component-name-loader']
+      },
+      {
+
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource'
       }
     ]
   },
@@ -47,16 +48,24 @@ module.exports = {
       __VUE_PROD_DEVTOOLS__: false,
       __VUE_OPTIONS_API__: false
     }),
-    new ESLintPlugin({
-      fix: true /* 自动帮助修复 */,
-      extensions: ['js', 'json', 'vue'],
-      exclude: 'node_modules'
-    }),
+    // element-plus按需导入
     AutoImport({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ]
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ]
+    }),
+    // 在按需导入时自定义主题颜色
+    ElementPlus({
+      useSource: true
     })
   ]
 };

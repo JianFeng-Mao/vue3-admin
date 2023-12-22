@@ -54,17 +54,18 @@ module.exports = {
         array: false
       }
     ],
-    'max-len': 'off',
-    'vue/comment-directive': 'off',
     'class-methods-use-this': ['error', { exceptMethods: ['apply'] }],
     'import/no-extraneous-dependencies': 'off',
     'space-before-function-paren': [
       'error', {
         anonymous: 'never',
-        named: 'never',
-        asyncArrow: 'always'
+        named: 'always',
+        asyncArrow: 'never'
       }
     ],
+    'import/prefer-default-export': 'off',
+    'vue/comment-directive': 'off',
+    'no-plusplus': 'off',
     'no-param-reassign': 'off',
     'func-names': 'off',
     'prettier/prettier': 'off',
@@ -102,6 +103,7 @@ module.exports = {
         alignAttributesVertically: true
       }
     ],
+    'vue/mustache-interpolation-spacing': ['error', 'always'],
     'vue/html-closing-bracket-spacing': [
       'error',
       { selfClosingTag: 'always' }
