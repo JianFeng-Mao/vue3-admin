@@ -24,7 +24,7 @@
 	</div>
 </template>
 
-<script setup>
+<script  setup>
 import { ref } from 'vue';
 import { ElTable } from 'element-plus';
 

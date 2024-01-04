@@ -9,16 +9,17 @@ module.exports = merge(commonConfig, {
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
+        test: /\.(s)?css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, 'dist/index.html'),
-      template: path.resolve(__dirname, 'index.html'),
+      template: path.resolve(__dirname, 'public/index.html'),
       publicPath: '/static'
     })
   ]
+
 });

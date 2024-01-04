@@ -1,0 +1,23 @@
+@use './element-vars.scss' as *;
+.common-layout-wrap {
+  --tag-text-font-size: 14px;
+  --tag-icon-font-size: 12px;
+}
+
+.__default-layout-wrap {
+  --el-logo-height: 35px;
+  --el-aside-width: 170px;
+
+  padding: $base-padding;
+  box-sizing: border-box;
+  .el-aside {
+    background-color: var(--el-bg-color);
+    transition: all .3s;
+    border-radius: var(--el-border-radius-base);
+    box-shadow: var(--el-box-shadow);
+  }
+  .el-menu {
+    height: calc(100% - var(--el-logo-height) - 8px);
+    border-right: none;
+  }
+}

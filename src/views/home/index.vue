@@ -4,8 +4,6 @@
 	</div>
 </template>
 
-<script name="home" setup></script>
+<script name="home" setup>
 
-<style lang="scss" scoped>
-
-</style>
+</script>

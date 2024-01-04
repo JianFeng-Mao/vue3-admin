@@ -63,6 +63,7 @@ module.exports = {
         asyncArrow: 'never'
       }
     ],
+    'max-len': 'off',
     'import/prefer-default-export': 'off',
     'vue/comment-directive': 'off',
     'no-plusplus': 'off',
@@ -105,8 +106,11 @@ module.exports = {
     ],
     'vue/mustache-interpolation-spacing': ['error', 'always'],
     'vue/html-closing-bracket-spacing': [
-      'error',
-      { selfClosingTag: 'always' }
+      'error', {
+        startTag: 'never',
+        endTag: 'never',
+        selfClosingTag: 'always'
+      }
     ],
     'vue/html-self-closing': [
       'error',

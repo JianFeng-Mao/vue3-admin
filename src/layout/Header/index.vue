@@ -1,11 +1,11 @@
 <template>
 	<el-header>
-		header
+		<Navbar />
 	</el-header>
 </template>
 
-<script name="header" setup>
-
+<script name="Header" setup>
+import Navbar from '@/components/Navbar';
 </script>
 
 <style lang="scss" scoped>

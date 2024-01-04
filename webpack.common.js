@@ -23,7 +23,10 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src')
     },
-    extensions: ['.js', '.vue', '.json']
+    extensions: ['.js', '.vue', '.json'],
+    fallback: {
+      path: require.resolve('path-browserify')
+    }
   },
   resolveLoader: {
     modules: ['node_modules', './loaders']
@@ -35,10 +38,10 @@ module.exports = {
         use: ['vue-loader', 'component-name-loader']
       },
       {
-
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource'
       }
+
     ]
   },
   plugins: [

@@ -1,7 +1,9 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': #90d12e,
-    ),
-  ),
+    'base': #90D12E
+    )
+  ) 
 );
+
+$base-padding: 16px;

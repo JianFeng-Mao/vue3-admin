@@ -1,19 +1,12 @@
 <template>
-	<component :is="`${layout.LAYOUT_MODE}`" />
+	<DefaultLayout class="common-layout-wrap" />
 </template>
 
 <script name="Layout" setup>
-import { useConfigStore } from '@/stores/config';
-import Default from './containers/default';
-import Classic from './containers/classic';
+import DefaultLayout from './containers/default';
+// import HorizontalLayout from './containers/horizontal';
 
-defineOptions({
-  components: { Default, Classic }
-});
-
-const { layout } = useConfigStore();
 </script>
 
 <style lang="scss" scoped>
-
 </style>
