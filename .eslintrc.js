@@ -47,6 +47,17 @@ module.exports = {
     //     }
     //   }
     // ],
+    'keyword-spacing': [
+      'error', {
+        overrides: {
+          if: { after: false },
+          for: { after: false },
+          while: { after: false },
+          static: { after: false },
+          as: { after: false }
+        }
+      }
+    ],
     'no-restricted-syntax': 'off',
     'prefer-destructuring': [
       'error',
