@@ -5,13 +5,13 @@ export const useTagsStore = defineStore('tagsView', () => {
   const visibleTags = ref([]);
 
   function addTag(tag) {
-    if (visibleTags.value.some((t) => t.name === tag.name)) return;
+    if(visibleTags.value.some((t) => t.name === tag.name)) return;
     visibleTags.value.push({ ...tag, title: tag.meta.title });
   }
 
   function delTag(tag) {
-    for (const [index, item] of visibleTags.value.entries()) {
-      if (tag.path === item.path) {
+    for(const [index, item] of visibleTags.value.entries()) {
+      if(tag.path === item.path) {
         visibleTags.value.splice(index, 1);
         break;
       }

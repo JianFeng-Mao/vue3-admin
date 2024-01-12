@@ -25,6 +25,14 @@
 				<div class="active-tag-item-box" :style="activeTagBoxStyle" />
 			</div>
 		</el-scrollbar>
+
+		<ul v-show="visible" class="">
+			<li>关闭当前</li>
+			<li>关闭其它</li>
+			<li>关闭左侧</li>
+			<li>关闭右侧</li>
+			<li>关闭所有</li>
+		</ul>
 	</div>
 </template>
 
@@ -45,15 +53,17 @@ const $router = useRouter();
 
 const tagsStore = useTagsStore();
 
+// 当前tag是否激活状态
 const isActive = (route) => route.path === $route.path;
 
-// 菜单固定在tagsView
+// 菜单是否固定在tagsView
 const isAffix = (route) => route.meta && route.meta.affix;
 
+// 过滤affix tag
 function fileterAffixTags(routeList, basePath = '/') {
   let tags = [];
   routeList.forEach((route) => {
-    if (isAffix(route)) {
+    if(isAffix(route)) {
       const tagPath = path.resolve(basePath, route.path);
       tags.push({
         path: tagPath,
@@ -62,9 +72,9 @@ function fileterAffixTags(routeList, basePath = '/') {
         meta: { ...route.meta }
       });
     }
-    if (!isEmpty(route.children)) {
+    if(!isEmpty(route.children)) {
       const tempTags = fileterAffixTags(route.children, route.path);
-      if (tempTags.length >= 1) {
+      if(tempTags.length >= 1) {
         tags = [...tags, ...tempTags];
       }
     }
@@ -72,12 +82,14 @@ function fileterAffixTags(routeList, basePath = '/') {
   return tags;
 }
 
+// 添加tag
 function addTag(tag) {
-  if (tag.name) {
+  if(tag.name) {
     tagsStore.addTag(tag);
   }
 }
 
+// 初始化tag
 function initTag() {
   affixTags.value = fileterAffixTags(routes);
   affixTags.value.forEach((tag) => {
@@ -85,33 +97,9 @@ function initTag() {
   });
 }
 
-function updateView(tags, tag) {
-  if (tag.meta.activeMenu) {
-    $router.push(tag.meta.activeMenu);
-  } else {
-    const lastTag = tags.value.slice(-1)[0];
-    if (lastTag) {
-      $router.push(lastTag.fullPath);
-    } else {
-      $router.push('/');
-    }
-  }
-}
-
-function closeTag(tag) {
-  const visiableTags = tagsStore.delTag(tag);
-  if (isActive(tag)) {
-    updateView(visiableTags, tag);
-  }
-}
-
-function openMenu(tag) {
-  // TODO:
-}
-
+// 更新tag bg style
 const tagRefs = useTemplateRefsList();
 const activeTagBoxStyle = ref({});
-
 function updateActiveTagBoxStyle() {
   const style = {
     width: 0,
@@ -119,13 +107,55 @@ function updateActiveTagBoxStyle() {
   };
   const activeTagIndex = tagRefs.value.findIndex((tag) => isActive({ ...tag, path: tag.dataset.path }));
   const activeTag = activeTagIndex > -1 ? tagRefs.value[activeTagIndex] : null;
-  if (activeTag) {
+  if(activeTag) {
     style.width = `${activeTag.clientWidth}px`;
     style.height = `${activeTag.clientHeight}px`;
     style.transform = `translateX(${activeTag.offsetLeft}px)`;
   }
   activeTagBoxStyle.value = style;
 }
+
+// 更新路由
+function updateView(tags, tag) {
+  if(tag.meta.activeMenu) {
+    $router.push(tag.meta.activeMenu);
+  } else {
+    const lastTag = tags.value.slice(-1)[0];
+    if(lastTag) {
+      $router.push(lastTag.fullPath);
+    } else {
+      $router.push('/');
+    }
+  }
+}
+
+// 关闭标签
+function closeTag(tag) {
+  const visiableTags = tagsStore.delTag(tag);
+  if(isActive(tag)) {
+    updateView(visiableTags, tag);
+  }
+}
+
+const visible = ref(false);
+
+// 打开操作菜单
+function openMenu(tag) {
+  // TODO:
+  visible.value = true;
+}
+
+// 关闭操作菜单
+function closeMenu() {}
+
+// 操作菜单展开时监听全局点击事件，用于关闭操作菜单
+watch(visible, (val) => {
+  if(val) {
+    window.addEventListener('click', closeMenu());
+  } else {
+    window.removeEventListener('click', closeMenu());
+  }
+});
 
 onMounted(() => {
   initTag();
