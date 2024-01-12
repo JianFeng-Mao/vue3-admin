@@ -3,18 +3,24 @@
 		<el-scrollbar>
 			<div class="tag-list">
 				<router-link
-					v-for="item in items"
-					ref="tagRef"
+					v-for="item in tagsStore.visibleTags"
 					:key="item.path"
 					:to="item.path"
-					:path="item.path"
-					:class="['tag-item', {'active-tag-item': isActive(item)}]"
+					@contextmenu.prevent="openMenu(item)"
 				>
-					<span class="name">
-						<span class="circle" />
-						{{ item.label }}
-					</span>
-					<el-icon><Close /></el-icon>
+					<div
+						:class="['tag-item', {'active-tag-item': isActive(item)}]"
+						:ref="tagRefs.set"
+						:data-path="item.path"
+					>
+						<span class="name">
+							<span class="circle" />
+							{{ item.title }}
+						</span>
+						<el-icon v-if="!isAffix(item)" @click.prevent.stop="closeTag(item)">
+							<Close />
+						</el-icon>
+					</div>
 				</router-link>
 				<div class="active-tag-item-box" :style="activeTagBoxStyle" />
 			</div>
@@ -24,35 +30,116 @@
 
 <script name="tags" setup>
 import { Close } from '@element-plus/icons-vue';
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, watch, onMounted, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import path from 'path';
+import { isEmpty } from '@/utils/is';
+import { routes } from '@/router';
+import { useTagsStore } from '@/stores/tagsView';
+import { useTemplateRefsList } from '@vueuse/core';
 
-const items = [
-  {
-    label: 'tag1',
-    path: '/home'
-  },
-  {
-    label: 'tag2',
-    path: '/tabsManage/tabs'
-  }
-];
+const affixTags = ref([]);
+
 const $route = useRoute();
+const $router = useRouter();
+
+const tagsStore = useTagsStore();
+
 const isActive = (route) => route.path === $route.path;
-const tagRef = ref([]);
-const activeTagBoxStyle = computed(() => {
+
+// 菜单固定在tagsView
+const isAffix = (route) => route.meta && route.meta.affix;
+
+function fileterAffixTags(routeList, basePath = '/') {
+  let tags = [];
+  routeList.forEach((route) => {
+    if (isAffix(route)) {
+      const tagPath = path.resolve(basePath, route.path);
+      tags.push({
+        path: tagPath,
+        fullPath: tagPath,
+        name: route.name,
+        meta: { ...route.meta }
+      });
+    }
+    if (!isEmpty(route.children)) {
+      const tempTags = fileterAffixTags(route.children, route.path);
+      if (tempTags.length >= 1) {
+        tags = [...tags, ...tempTags];
+      }
+    }
+  });
+  return tags;
+}
+
+function addTag(tag) {
+  if (tag.name) {
+    tagsStore.addTag(tag);
+  }
+}
+
+function initTag() {
+  affixTags.value = fileterAffixTags(routes);
+  affixTags.value.forEach((tag) => {
+    addTag(tag);
+  });
+}
+
+function updateView(tags, tag) {
+  if (tag.meta.activeMenu) {
+    $router.push(tag.meta.activeMenu);
+  } else {
+    const lastTag = tags.value.slice(-1)[0];
+    if (lastTag) {
+      $router.push(lastTag.fullPath);
+    } else {
+      $router.push('/');
+    }
+  }
+}
+
+function closeTag(tag) {
+  const visiableTags = tagsStore.delTag(tag);
+  if (isActive(tag)) {
+    updateView(visiableTags, tag);
+  }
+}
+
+function openMenu(tag) {
+  // TODO:
+}
+
+const tagRefs = useTemplateRefsList();
+const activeTagBoxStyle = ref({});
+
+function updateActiveTagBoxStyle() {
   const style = {
     width: 0,
     transform: 'translateX(0)'
   };
-  const activeTagIndex = tagRef.value.findIndex((tag) => isActive({ ...tag, path: tag.$attrs.path }));
-  const activeTag = activeTagIndex > -1 ? tagRef.value[activeTagIndex] : null;
+  const activeTagIndex = tagRefs.value.findIndex((tag) => isActive({ ...tag, path: tag.dataset.path }));
+  const activeTag = activeTagIndex > -1 ? tagRefs.value[activeTagIndex] : null;
   if (activeTag) {
-    style.width = `${activeTag.$el.clientWidth}px`;
-    style.height = `${activeTag.$el.clientHeight}px`;
-    style.transform = `translateX(${activeTag.$el.offsetLeft}px)`;
+    style.width = `${activeTag.clientWidth}px`;
+    style.height = `${activeTag.clientHeight}px`;
+    style.transform = `translateX(${activeTag.offsetLeft}px)`;
   }
-  return style;
+  activeTagBoxStyle.value = style;
+}
+
+onMounted(() => {
+  initTag();
+  addTag($route);
+  nextTick(() => {
+    updateActiveTagBoxStyle();
+  });
+});
+
+watch($route, (route) => {
+  addTag(route);
+  nextTick(() => {
+    updateActiveTagBoxStyle();
+  });
 });
 </script>
 
@@ -65,7 +152,7 @@ const activeTagBoxStyle = computed(() => {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 8px 16px;
+      padding: 12px 16px;
       position: relative;
       font-size: var(--tag-text-font-size);
       color: var(--el-text-color-primary);
@@ -97,6 +184,7 @@ const activeTagBoxStyle = computed(() => {
         background-color: var(--el-color-info);
         border-radius: 50%;
         vertical-align: middle;
+        margin-bottom: 2px;
         transition: all .3s;
       }
       .name {

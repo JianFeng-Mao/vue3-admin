@@ -47,6 +47,7 @@ module.exports = {
     //     }
     //   }
     // ],
+    'no-restricted-syntax': 'off',
     'prefer-destructuring': [
       'error',
       {
@@ -59,7 +60,7 @@ module.exports = {
     'space-before-function-paren': [
       'error', {
         anonymous: 'never',
-        named: 'always',
+        named: 'never',
         asyncArrow: 'never'
       }
     ],

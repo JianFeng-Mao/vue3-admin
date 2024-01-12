@@ -35,8 +35,8 @@
 <script name="MenuItem" setup>
 import { ref } from 'vue';
 import path from 'path';
-import MenuLink from './Link';
 import { isExternal } from '@/utils/is';
+import MenuLink from './Link';
 import MenuTitle from './Title';
 
 const props = defineProps({
